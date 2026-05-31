@@ -16,6 +16,7 @@ interface LoanDetails {
   totalRepayment: number;
   amountPaid: number;
   status: 'PENDING' | 'SANCTIONED' | 'DISBURSED' | 'REJECTED' | 'CLOSED';
+  salarySlipUrl?: string;
   createdAt: string;
 }
 
@@ -412,6 +413,24 @@ export default function BorrowerDashboard() {
                 {appliedLoan.status}
               </span>
             </div>
+            {appliedLoan.salarySlipUrl && (
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Salary Slip</span>
+                {
+                  (() => {
+                    const url = appliedLoan.salarySlipUrl as string;
+                    // If already absolute, use it. Otherwise prefix with NEXT_PUBLIC_API_URL or current origin
+                    const envBase = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
+                    const fileUrl = url.startsWith('http') ? url : (envBase || (typeof window !== 'undefined' ? window.location.origin : '')) + (url.startsWith('/') ? url : `/${url}`);
+                    return (
+                      <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 underline truncate max-w-xs block">
+                        {decodeURIComponent(url.split('/').pop() || url)}
+                      </a>
+                    );
+                  })()
+                }
+              </div>
+            )}
           </div>
         </div>
       )}
