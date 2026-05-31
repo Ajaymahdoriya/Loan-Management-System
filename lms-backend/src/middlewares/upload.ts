@@ -20,3 +20,14 @@ export const uploadSalarySlip = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter
 });
+
+// Wrapper to ensure errors from multer are forwarded to Express error handler
+export const uploadSalarySlipSingle = (fieldName: string) => {
+  return (req: any, res: any, next: any) => {
+    const middleware = uploadSalarySlip.single(fieldName);
+    middleware(req, res, (err: any) => {
+      if (err) return next(err);
+      next();
+    });
+  };
+};

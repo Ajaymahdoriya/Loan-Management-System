@@ -1,6 +1,6 @@
 import express from 'express';
 import { verifyToken, authorizeRoles } from '../middlewares/auth';
-import { uploadSalarySlip } from '../middlewares/upload';
+import { uploadSalarySlipSingle } from '../middlewares/upload';
 
 import { registerBorrower, login, getCurrentUser } from '../controllers/authController';
 import { applyLoan } from '../controllers/borrowerController';
@@ -17,7 +17,7 @@ router.post('/auth/login', login);
 router.get('/auth/me', verifyToken, getCurrentUser);
 
 // Borrower
-router.post('/borrower/apply', verifyToken, authorizeRoles('Borrower'), uploadSalarySlip.single('salarySlip'), applyLoan);
+router.post('/borrower/apply', verifyToken, authorizeRoles('Borrower'), uploadSalarySlipSingle('salarySlip'), applyLoan);
 
 // Dashboard (RBAC Protected)
 router.get('/dashboard/sales/leads', verifyToken, authorizeRoles('Sales'), getSalesLeads);
