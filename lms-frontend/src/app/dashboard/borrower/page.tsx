@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, getUploadsUrl } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { 
   PlusCircle, FileText, CheckCircle, AlertCircle, 
@@ -419,9 +419,7 @@ export default function BorrowerDashboard() {
                 {
                   (() => {
                     const url = appliedLoan.salarySlipUrl as string;
-                    // If already absolute, use it. Otherwise prefix with NEXT_PUBLIC_API_URL or current origin
-                    const envBase = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
-                    const fileUrl = url.startsWith('http') ? url : (envBase || (typeof window !== 'undefined' ? window.location.origin : '')) + (url.startsWith('/') ? url : `/${url}`);
+                    const fileUrl = url.startsWith('http') ? url : getUploadsUrl(url);
                     return (
                       <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 underline truncate max-w-xs block">
                         {decodeURIComponent(url.split('/').pop() || url)}

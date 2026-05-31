@@ -53,3 +53,11 @@ export async function apiFetch(endpoint: string, options: CustomRequestInit = {}
   
   return response;
 }
+
+export function getUploadsUrl(uploadPath: string) {
+  const envBase = process.env.NEXT_PUBLIC_API_URL?.trim()?.replace(/\/$/, '');
+  const origin = (typeof window !== 'undefined') ? window.location.origin.replace(/\/$/, '') : '';
+  const base = envBase || origin || 'http://localhost:5000';
+  const path = uploadPath.startsWith('/') ? uploadPath : `/${uploadPath}`;
+  return `${base}${path}`;
+}
