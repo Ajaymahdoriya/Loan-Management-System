@@ -1,5 +1,6 @@
 import { AuthRequest } from '../middlewares/auth';
 import { Response } from 'express';
+import path from 'path';
 import User from '../models/User';
 import Loan from '../models/Loan';
 import { runBusinessRuleEngine } from '../utils/bre';
@@ -18,11 +19,15 @@ export const applyLoan = async (req: AuthRequest, res: Response) => {
 
     const totalRepayment = calculateRepayment(Number(amount), Number(tenure));
 
+    // Normalize salary slip URL to a public-facing path under /uploads
+    const filename = path.basename(file.path);
+    const publicPath = `/uploads/${filename}`;
+
     const loan = new Loan({
       borrowerId: user._id,
       amount: Number(amount),
       tenure: Number(tenure),
-      salarySlipUrl: file.path,
+      salarySlipUrl: publicPath,
       totalRepayment,
       status: 'PENDING'
     });
