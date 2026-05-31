@@ -7,14 +7,6 @@ import apiRoutes from './routes/api';
 dotenv.config();
 connectDB();
 
-// Ensure uploads directory exists
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db';
-import apiRoutes from './routes/api';
-
-dotenv.config();
-connectDB();
 
 const app: Application = express();
 
