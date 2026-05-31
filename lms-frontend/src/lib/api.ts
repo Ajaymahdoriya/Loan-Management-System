@@ -3,10 +3,14 @@ interface CustomRequestInit extends Omit<RequestInit, 'body'> {
 }
 
 export async function apiFetch(endpoint: string, options: CustomRequestInit = {}) {
-  const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-  const baseUrl = rawBaseUrl.replace(/\/$/, '').endsWith('/api')
-    ? rawBaseUrl.replace(/\/$/, '')
-    : `${rawBaseUrl.replace(/\/$/, '')}/api`;
+  const envBaseUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+  const baseUrl = envBaseUrl
+    ? (envBaseUrl.replace(/\/$/, '').endsWith('/api')
+        ? envBaseUrl.replace(/\/$/, '')
+        : `${envBaseUrl.replace(/\/$/, '')}/api`)
+    : (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+        ? '/api'
+        : 'http://localhost:5000/api');
   
   // Ensure endpoint starts with '/'
   const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
